@@ -14,7 +14,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 | 2 | Sales by model from press releases (complaints per vehicle sold) | TODO (`sales` table) |
 | 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | TODO |
 | 4 | Spike detector on model/component complaint rates | First version done (`src/detect_spikes.py` -> `spikes` table); needs tuning + sales normalization |
-| 5 | Backtest on past recalls, all five brands: how early would it have fired? | TODO |
+| 5 | Backtest on past recalls, all five brands: how early would it have fired? | First version done (`src/backtest.py` -> `backtest` table); detector not yet tuned |
 | 6 | Recall latency (first clustering -> recall date) by brand and component | TODO |
 | 7 | Weekly GitHub Action refresh | TODO |
 | 8 | Tableau Public dashboard + one-page recommendation | TODO |
@@ -30,6 +30,7 @@ python src/ingest_recalls.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/ingest_investigations.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/build_component_map.py data/recall_radar.db   # after the three ingests
 python src/detect_spikes.py data/recall_radar.db
+python src/backtest.py data/recall_radar.db
 ```
 
 Raw NHTSA flat files go in `data/raw/` (git-ignored).
@@ -42,12 +43,13 @@ Raw NHTSA flat files go in `data/raw/` (git-ignored).
 - Investigations are one row per (investigation, make, model, year, campaign): count `DISTINCT nhtsa_id`. `campno` links an investigation to the recall(s) it led to (`recalls.campno`); one investigation can link to many campaigns, and most have none.
 - `component_map` covers every raw component string in all three tables (`system` = level-1 name made consistent, e.g. ENGINE AND ENGINE COOLING -> ENGINE; `component_group` = topic bucket). NHTSA has no infotainment category, so that bucket is a proxy (instrument cluster, rear-camera display, communication) and a few large recall campaigns dominate it; refine with text mining. Rules are in the script; review them before trusting group-level results.
 - `spikes` flags (make, model, system, month) when the trailing 3-month complaint count is >=3x a model-scaled 24-month baseline (Poisson p<0.001, >=5 complaints). `onset=1` marks the first month of an episode; the backtest should use onset rows that precede a recall. Parameters are constants at the top of the script. No fleet-size adjustment yet, and complaints surge after recall announcements.
+- `backtest` scores each recall event (campaign x make x model x system) against `spikes` in the 12 months before `report_date`. Headline uses "clean" flags (not within 6 months after another recall in the same series, since recalls trigger complaint surges). Eligible = series with >=30 complaints and enough history.
 - NHTSA make `GENESIS` also covers pre-2015 non-Hyundai items (e.g. 1993 equipment recalls); filter to 2015+ for the Genesis brand.
 - Tesla does not publish sales by model; any figures are estimates and must be labeled as such.
 
 ## Result (fill in once the backtest exists)
 
-> Flagged X of Y backtested recalls an average of Z weeks before announcement.
+> Preliminary (untuned detector, data as of 2026-11-01): flagged 166 of 2,026 eligible recalls (8%) a median of 29 weeks before announcement. Detection rises with complaint volume: 0 of 522 recalls with <5 prior-year complaints, 4% at 5-14, 18% at 15-49, 31% at 50+. 1,274 further recalls were on series too quiet to test at all.
 
 ## Recommendation
 

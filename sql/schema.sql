@@ -68,6 +68,21 @@ CREATE TABLE IF NOT EXISTS spikes (
     PRIMARY KEY (make, model, system, month)
 );
 
+-- One row per recall event (campaign x make x model x system), scored by src/backtest.py:
+-- did the spike detector flag that series before the recall, and how early?
+CREATE TABLE IF NOT EXISTS backtest (
+    campno          TEXT NOT NULL,
+    make            TEXT NOT NULL,
+    model           TEXT NOT NULL,
+    system          TEXT NOT NULL,
+    report_date     DATE NOT NULL,
+    eligible        INTEGER NOT NULL, -- 1 if the detector could have fired (enough complaints and history)
+    first_flag      TEXT,             -- YYYY-MM of earliest qualifying flag in the lookback, else NULL
+    lead_weeks      REAL,             -- weeks from the end of that month to report_date
+    clean           INTEGER,          -- 1 if no other recall hit this series in the 6 months before the flag
+    PRIMARY KEY (campno, make, model, system)
+);
+
 -- Maps every distinct raw component string in complaints/recalls/investigations (exact text, as stored)
 -- to a normalized `system` (level-1 name made consistent across tables) and one of 5 topic buckets.
 -- Built by src/build_component_map.py. NHTSA has no infotainment category: that bucket is a rough

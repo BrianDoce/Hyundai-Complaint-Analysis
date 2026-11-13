@@ -1,6 +1,6 @@
 """Load NHTSA complaints for the backtest brands into SQLite.
 
-Reads the COMPLAINTS_RECEIVED_*.zip files directly and fills `complaints`
+Reads the COMPLAINTS_RECEIVED_*.zip files (or a single FLAT_CMPL.txt) and fills `complaints`
 (see sql/schema.sql). Re-running replaces the table, so it is safe for the
 weekly refresh.
 
@@ -36,9 +36,9 @@ def to_int(s):
 
 
 def main(raw_dir, db_path):
-    zips = sorted(Path(raw_dir).glob("COMPLAINTS_RECEIVED_*.zip"))
+    zips = sorted(Path(raw_dir).glob("COMPLAINTS_RECEIVED_*.zip")) or sorted(Path(raw_dir).glob("FLAT_CMPL.txt"))
     if not zips:
-        sys.exit(f"no COMPLAINTS_RECEIVED_*.zip in {raw_dir}")
+        sys.exit(f"no COMPLAINTS_RECEIVED_*.zip or FLAT_CMPL.txt in {raw_dir}")
     schema = (Path(__file__).parent.parent / "sql" / "schema.sql").read_text()
 
     con = sqlite3.connect(db_path)

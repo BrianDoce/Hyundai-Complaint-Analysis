@@ -53,15 +53,25 @@ MODELS = {
 }
 
 
-def iter_rows(zip_path):
-    with zipfile.ZipFile(zip_path) as zf:
-        (name,) = zf.namelist()
-        with io.TextIOWrapper(zf.open(name), encoding="latin-1", newline="") as f:
-            for line_no, line in enumerate(f, 1):
-                parts = line.rstrip("\r\n").split("\t")
-                if len(parts) != len(FIELDS):
-                    raise ValueError(f"{zip_path}:{line_no}: {len(parts)} fields, expected {len(FIELDS)}")
-                yield dict(zip(FIELDS, parts))
+def iter_rows(path):
+    """Yield complaint dicts from a COMPLAINTS_RECEIVED zip or a plain FLAT_CMPL.txt."""
+    path = Path(path)
+    if path.suffix == ".zip":
+        with zipfile.ZipFile(path) as zf:
+            (name,) = zf.namelist()
+            with io.TextIOWrapper(zf.open(name), encoding="latin-1", newline="") as f:
+                yield from _parse(f, path)
+    else:
+        with open(path, encoding="latin-1", newline="") as f:
+            yield from _parse(f, path)
+
+
+def _parse(f, path):
+    for line_no, line in enumerate(f, 1):
+        parts = line.rstrip("\r\n").split("\t")
+        if len(parts) != len(FIELDS):
+            raise ValueError(f"{path}:{line_no}: {len(parts)} fields, expected {len(FIELDS)}")
+        yield dict(zip(FIELDS, parts))
 
 
 def main(raw_dir, out_path):

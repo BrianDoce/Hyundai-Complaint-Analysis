@@ -64,12 +64,12 @@ def run_config(data, events, elig, params):
     return out
 
 
-def baseline_precision(data, events, elig, start, end):
-    """No-skill precision: clean eligible system-level series-months followed by a recall in 12 months."""
-    rec = _recall_index(events, "system")
+def baseline_precision(data, events, elig, start, end, level="system"):
+    """No-skill precision: clean eligible series-months at `level` followed by a recall in 12 months."""
+    rec = _recall_index(events, level)
     data_end = events["report_date"].max()
     hits = total = 0
-    for key, first in elig["system"].items():
+    for key, first in elig[level].items():
         r = rec.get(key)
         for m in pd.period_range(first, pd.Period(data["last"], "M"), freq="M"):
             fd = m.end_time.normalize()

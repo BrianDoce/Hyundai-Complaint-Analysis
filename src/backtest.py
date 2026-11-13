@@ -33,7 +33,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from detect_spikes import LEVELS, PARAMS
+from detect_spikes import LEVELS, PARAMS, TOPIC_COLS
 
 LOOKBACK_DAYS = 365
 CONTAM_DAYS = 183
@@ -48,14 +48,21 @@ def load_events(con):
            WHERE r.report_date IS NOT NULL
            GROUP BY 1, 2, 3, 4, 5""", con)
     ev["report_date"] = pd.to_datetime(ev["report_date"])
+    rt = pd.read_sql_query("SELECT * FROM recall_text", con).set_index("campno")
+    topics = {c: [t for t in TOPIC_COLS if row[t] == 1] for c, row in rt.iterrows()}
+    ev["topics"] = ev["campno"].map(lambda c: topics.get(c, []))
     return ev
 
 
 def _recall_index(events, level):
     """key -> (sorted dates array, matching campnos) of recalls in that series."""
-    col = "system" if level == "system" else "subsystem"
+    if level == "topic":
+        ev = events.explode("topics").dropna(subset=["topics"]).rename(columns={"topics": "topic"})
+        col = "topic"
+    else:
+        ev, col = events, level
     idx = {}
-    for key, g in events.drop_duplicates(["campno", "make", "model", col]).groupby(["make", "model", col]):
+    for key, g in ev.drop_duplicates(["campno", "make", "model", col]).groupby(["make", "model", col]):
         g = g.sort_values("report_date")
         idx[key] = (g["report_date"].to_numpy(), g["campno"].to_numpy())
     return idx
@@ -99,25 +106,27 @@ def score_events(events, spikes, elig, levels=LEVELS, clean_only=True):
     flag_idx = {lv: _flag_index(spikes, lv)[0] for lv in LEVELS}
     rows = []
     for r in events.itertuples():
-        keys = {"system": (r.make, r.model, r.system), "subsystem": (r.make, r.model, r.subsystem)}
-        eligible = any(keys[lv] in elig[lv] and r.report_date >= elig[lv][keys[lv]] for lv in LEVELS)
+        keys = {"system": [(r.make, r.model, r.system)], "subsystem": [(r.make, r.model, r.subsystem)],
+                "topic": [(r.make, r.model, t) for t in r.topics]}
+        eligible = any(k in elig[lv] and r.report_date >= elig[lv][k] for lv in LEVELS for k in keys[lv])
         best = None  # (lead_days, level, month, clean)
         if eligible:
             lo = np.datetime64(r.report_date - pd.Timedelta(days=LOOKBACK_DAYS))
             hi = np.datetime64(r.report_date)
             for lv in levels:
-                f = flag_idx[lv].get(keys[lv])
+              for key in keys[lv]:
+                f = flag_idx[lv].get(key)
                 if f is None:
                     continue
                 dates, months, _ = f
                 for i in range(np.searchsorted(dates, lo, side="left"), np.searchsorted(dates, hi, side="left")):
-                    clean = not _contaminated(rec_idx[lv].get(keys[lv]), dates[i], r.campno)
+                    clean = not _contaminated(rec_idx[lv].get(key), dates[i], r.campno)
                     if clean_only and not clean:
                         continue
                     lead = (np.datetime64(r.report_date) - dates[i]) / np.timedelta64(1, "D")
                     if best is None or lead > best[0]:
                         best = (lead, lv, months[i], int(clean))
-                    break  # earliest qualifying flag in this level
+                    break  # earliest qualifying flag for this series
         rows.append((r.campno, r.make, r.model, r.system, r.subsystem,
                      r.report_date.date().isoformat(), int(eligible),
                      best[1] if best else None, best[2] if best else None,
@@ -172,13 +181,14 @@ def main(db_path):
     data = load_data(con)
     elig = eligible_keys(data)
     res = score_events(events, spikes, elig)
-    for lv in (("system",), ("subsystem",)):
+    for lv in (("system",), ("subsystem",), ("topic",), ("system", "subsystem")):
         r = score_events(events, spikes, elig, levels=lv)
         e = r[r["eligible"] == 1]
-        print(f"{lv[0]:>9} only: flagged {e['first_flag'].notna().sum():,} of {len(e):,} "
-              f"({e['first_flag'].notna().mean():.0%})")
+        h, t = onset_precision(events, spikes, lv)
+        print(f"{'+'.join(lv):>17}: flagged {e['first_flag'].notna().sum():,} of {len(e):,} "
+              f"({e['first_flag'].notna().mean():.0%}); onset precision {h:,}/{t:,} ({h / max(t, 1):.1%})")
     print()
-    summarize(res, "both levels: ")
+    summarize(res, "all levels: ")
     h, t = onset_precision(events, spikes, LEVELS)
     print(f"onset precision: {h:,} of {t:,} clean episodes followed by a same-series recall within 12 months ({h / t:.0%})")
     con.execute("DROP TABLE IF EXISTS backtest")

@@ -12,8 +12,8 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 |---|-----------|--------|
 | 1 | SQL database linking complaints, recalls, investigations (make/model/year/component) | Schema in `sql/schema.sql`; complaints ingest done (`src/ingest_complaints.py`); recalls ingest done (`src/ingest_recalls.py`); investigations ingest done (`src/ingest_investigations.py`); `component_map` built (`src/build_component_map.py`) |
 | 2 | Sales by model from press releases (complaints per vehicle sold) | TODO (`sales` table) |
-| 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | Tagging done (`src/mine_text.py`, lexicon in `src/topics.py` -> `complaint_text`, `recall_text`); not yet validated or used in the detector |
-| 4 | Spike detector on model/component complaint rates | Done at system + subsystem level (`src/detect_spikes.py` -> `spikes`); time-split tuning (`src/tune.py`) found no better thresholds; sales normalization still to do |
+| 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | Tagging done (`src/mine_text.py`, lexicon in `src/topics.py` -> `complaint_text`, `recall_text`) and used as a third spike-detector level; sentiment computed but not yet used |
+| 4 | Spike detector on model/component complaint rates | Done at system, subsystem and text-topic level (`src/detect_spikes.py` -> `spikes`); thresholds not retuned since topics were added; sales normalization still to do |
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
 | 6 | Recall latency (first clustering -> recall date) by brand and component | TODO |
 | 7 | Weekly GitHub Action refresh | TODO |
@@ -48,12 +48,13 @@ Raw NHTSA flat files go in `data/raw/` (git-ignored).
 - `backtest` scores each recall event (campaign x make x model x system) against `spikes` in the 12 months before `report_date`. Headline uses "clean" flags (not within 6 months after another recall in the same series, since recalls trigger complaint surges). Eligible = series with >=30 complaints and enough history.
 - `component_map.subsystem` keeps NHTSA's second level (e.g. ELECTRICAL SYSTEM:SOFTWARE); many complaints only have level 1, so subsystem series are thin. Model year is still pooled.
 - `tune.py` uses a time split (cutoff 2021-01-01) and F0.5 of recall and episode precision, with a no-skill baseline. The baseline is all eligible series-months, which understates the chance rate for busy series (they get more recalls), so the true lift is, if anything, smaller.
+- `topic` spikes use the keyword tags in `complaint_text` (a complaint can be in several topics); recalls are matched through the same tags on the defect text (`recall_text`). Topic tags mean "mentions", so topic series are broad (powertrain is 31% of complaints) and their chance rate is high; always compare precision with `tune.baseline_precision` for the same level.
 - NHTSA make `GENESIS` also covers pre-2015 non-Hyundai items (e.g. 1993 equipment recalls); filter to 2015+ for the Genesis brand.
 - Tesla does not publish sales by model; any figures are estimates and must be labeled as such.
 
 ## Result (fill in once the backtest exists)
 
-> Data as of 2026-11-01, threshold search on pre-2021 recalls, scored on 2021+. At the default thresholds the detector flagged 185 of 2,096 eligible recalls (9%) a median of 30 weeks before announcement (system and subsystem series combined; subsystem alone adds little). But precision is close to chance: 8.5% of clean spike episodes in the 2021+ test period were followed by a recall in the same series within 12 months, versus 7.4% for a randomly chosen series-month (train period: 6.8% vs 5.2%). Tuning did not help: the best train thresholds gave 10.2% precision in train but 8.0% in test, no better than the defaults. Recall rises with complaint volume (earlier cut: 0% with <5 prior-year complaints, 31% with 50+). Complaint spikes alone are a weak recall predictor; see Recommendation.
+> Data as of 2026-11-01, default thresholds. Recall: system + topic series flag 220 of 2,239 eligible recalls (9.8%), a median of 32 weeks before announcement (adding subsystem: 10.3%). Precision, the share of clean spike episodes followed by a same-series recall within 12 months, beats each level's own no-skill rate: system 14.0% vs 5.7%, topic 24.8% vs 14.1% (2021+ only: 18.6% vs 7.4% and 27.3% vs 19.3%, the topic figure on just 55 episodes), subsystem 2.8% vs 1.9% (barely). Topic series catch 45 recalls that system series miss. Overall the detector is a modest, noisy early warning: it finds about 1 in 10 recalls, mostly high-volume defects, with 2-3x better-than-chance precision. An earlier version of this note said precision was near chance; that compared pooled precision against a system-only baseline and was wrong. Thresholds were tuned before topics existed and should be re-tuned on system + topic.
 
 ## Recommendation
 

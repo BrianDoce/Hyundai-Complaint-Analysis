@@ -1,7 +1,9 @@
 """Flag complaint spikes per (make, model, series) and store them in `spikes`.
 
-Two resolutions (`level`): 'system' (component_map.system, e.g. ELECTRICAL
-SYSTEM) and 'subsystem' (NHTSA's second level, e.g. ELECTRICAL SYSTEM:SOFTWARE).
+Three kinds of series (`level`): 'system' (component_map.system, e.g. ELECTRICAL
+SYSTEM), 'subsystem' (NHTSA's second level, e.g. ELECTRICAL SYSTEM:SOFTWARE) and
+'topic' (keyword tags mined from the complaint text, src/mine_text.py; a
+complaint can be in several topics and topics ignore NHTSA's component codes).
 Series: monthly count of DISTINCT complaints (by `received` month), model years
 pooled. A month is flagged when the trailing WINDOW-month count is far above
 the series' own baseline:
@@ -35,7 +37,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-LEVELS = ("system", "subsystem")
+LEVELS = ("system", "subsystem", "topic")
+TOPIC_COLS = ("powertrain", "electrical", "infotainment", "driver_assistance")
 
 PARAMS = dict(
     window=3,        # months in the trailing window
@@ -65,10 +68,18 @@ def load_data(con):
            FROM complaints x JOIN component_map m ON m.raw_component = COALESCE(x.component, '')
            WHERE x.received IS NOT NULL""", con)
     counts = {}
-    for level in LEVELS:
+    for level in ("system", "subsystem"):
         d = raw.drop_duplicates(["odino", "make", "model", level, "month"])
         counts[level] = (d.groupby(["make", "model", level, "month"]).size()
                          .rename("n").reset_index().rename(columns={level: "series"}))
+    txt = pd.read_sql_query(
+        f"""SELECT x.make, x.model, x.month, t.* FROM complaint_text t JOIN
+              (SELECT odino, MIN(make) AS make, MIN(model) AS model, MIN(substr(received, 1, 7)) AS month
+               FROM complaints WHERE received IS NOT NULL GROUP BY odino) x USING (odino)""", con)
+    long = txt.melt(id_vars=["make", "model", "month"], value_vars=list(TOPIC_COLS),
+                    var_name="series", value_name="tag")
+    long = long[long["tag"] == 1]
+    counts["topic"] = long.groupby(["make", "model", "series", "month"]).size().rename("n").reset_index()
     totals = (raw.drop_duplicates("odino").groupby(["make", "model", "month"]).size()
               .rename("total"))
     start = totals.reset_index().groupby(["make", "model"])["month"].min()

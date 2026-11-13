@@ -53,9 +53,9 @@ CREATE TABLE IF NOT EXISTS sales (
     PRIMARY KEY (make, model, calendar_year)
 );
 
--- Months flagged by src/detect_spikes.py, at two resolutions (`level`: 'system' or 'subsystem').
+-- Months flagged by src/detect_spikes.py (`level`: 'system', 'subsystem' or 'topic').
 -- One row per (make, model, series, month) whose trailing complaint count is far above that series' own
--- baseline. `series` is component_map.system or component_map.subsystem depending on level. Rebuilt every run.
+-- baseline. `series` is component_map.system, component_map.subsystem or a topic name, depending on level. Rebuilt every run.
 CREATE TABLE IF NOT EXISTS spikes (
     level       TEXT NOT NULL,
     make        TEXT NOT NULL,

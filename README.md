@@ -52,7 +52,7 @@ Raw NHTSA flat files go in `data/raw/` (git-ignored).
 
 ## Result (fill in once the backtest exists)
 
-> Data as of 2026-11-01, threshold search on pre-2021 recalls, scored on 2021+. At the default thresholds the detector flagged 185 of 2,096 eligible recalls (9%) a median of 30 weeks before announcement (system and subsystem series combined; subsystem alone adds little). But precision is close to chance: 8% of clean spike episodes were followed by a recall in the same series within 12 months, versus 7% for a randomly chosen series-month in the 2021+ test period (5% vs 7% in train/test splits of the baseline). Tuning did not help: the best train thresholds gave 10% precision in train and 8% in test. Recall rises with complaint volume (earlier cut: 0% with <5 prior-year complaints, 31% with 50+). Complaint spikes alone are a weak recall predictor; see Recommendation.
+> Data as of 2026-11-01, threshold search on pre-2021 recalls, scored on 2021+. At the default thresholds the detector flagged 185 of 2,096 eligible recalls (9%) a median of 30 weeks before announcement (system and subsystem series combined; subsystem alone adds little). But precision is close to chance: 8.5% of clean spike episodes in the 2021+ test period were followed by a recall in the same series within 12 months, versus 7.4% for a randomly chosen series-month (train period: 6.8% vs 5.2%). Tuning did not help: the best train thresholds gave 10.2% precision in train but 8.0% in test, no better than the defaults. Recall rises with complaint volume (earlier cut: 0% with <5 prior-year complaints, 31% with 50+). Complaint spikes alone are a weak recall predictor; see Recommendation.
 
 ## Recommendation
 

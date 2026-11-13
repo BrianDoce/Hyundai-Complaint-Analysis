@@ -60,18 +60,20 @@ GROUP_BY_SUBSYSTEM = {
 
 
 def classify(raw):
+    """-> (system, subsystem, component_group)."""
     parts = [p.strip().upper() for p in (raw or "").split(":")]
     l1 = parts[0]
     l2 = parts[1] if len(parts) > 1 else ""
     if l1 in CHILD_SEAT_L1:
-        return "CHILD SEAT", "other"
+        return "CHILD SEAT", "CHILD SEAT", "other"
     if l1 in JUNK_L1:
-        return "OTHER", "other"
+        return "OTHER", "OTHER", "other"
     system = SYSTEM_ALIASES.get(l1, l1)
     if system.startswith("SERVICE BRAKES"):  # incl. one free-text "...; AUTOHOLD..." variant
         system = "SERVICE BRAKES"
     group = GROUP_BY_SUBSYSTEM.get((system, l2)) or GROUP_BY_SYSTEM.get(system, "other")
-    return system, group
+    subsystem = f"{system}:{l2}" if l2 else system
+    return system, subsystem, group
 
 
 def main(db_path):
@@ -83,7 +85,7 @@ def main(db_path):
     for table in ("complaints", "recalls", "investigations"):
         raws.update(r for (r,) in con.execute(f"SELECT DISTINCT component FROM {table}"))
     raws = {r if r is not None else "" for r in raws}
-    con.executemany("INSERT INTO component_map VALUES (?,?,?)",
+    con.executemany("INSERT INTO component_map VALUES (?,?,?,?)",
                     [(r, *classify(r)) for r in sorted(raws)])
     con.commit()
     print(f"{len(raws):,} distinct raw components -> {db_path}")

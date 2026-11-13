@@ -1,21 +1,25 @@
 """Backtest the spike detector against past recalls.
 
-For every recall event (campaign x make x model x system) it asks whether
-`spikes` flagged the same make/model/system in the LOOKBACK_MONTHS before the
-announcement (report_date), and how many weeks early. A flag counts from the
-end of its month, so lead time is never overstated.
+Recall events are (campaign x make x model x subsystem). For each one we ask
+whether the detector flagged that series in the LOOKBACK_MONTHS before the
+announcement (report_date), at the system level or the subsystem level, and
+how many weeks early. A flag counts from the end of its month, so lead time is
+never overstated.
 
-Two views of "flagged":
-  any   earliest flag in the lookback window
-  clean earliest flag that is NOT within 6 months after another recall in the
-        same series (a recall announcement itself triggers a complaint surge,
-        which would make a second recall look predicted)
-The clean view is the headline; `any` is shown for comparison.
+"Clean" flags exclude any flag within 6 months after another recall in the
+same series: a recall announcement itself triggers a complaint surge, which
+would make a second recall look predicted. Clean is the headline.
 
-Only eligible recalls count in the denominator: the series needs >= 30 total
-complaints and enough history for the detector to have run. Recalls on parts
-nobody complains about can't be predicted from complaints; they're reported
-separately.
+Only eligible events count in the denominator: at least one level's series
+needs >= min_total complaints and enough history for the detector to have run.
+Recalls on parts nobody complains about can't be predicted from complaints;
+they are reported separately.
+
+Two scores, used by src/tune.py and printed here:
+  recall     share of eligible events with a clean flag before the recall
+  precision  share of clean episode onsets followed by a recall in the same
+             series within 12 months (onsets near the end of the data are
+             dropped because their outcome isn't known yet)
 
 Run after detect_spikes.py.
 
@@ -26,85 +30,162 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import numpy as np
 import pandas as pd
 
-from detect_spikes import MIN_HISTORY, MIN_TOTAL, WINDOW, load_counts
+from detect_spikes import LEVELS, PARAMS
 
-LOOKBACK_MONTHS = 12
-CONTAMINATION_MONTHS = 6
+LOOKBACK_DAYS = 365
+CONTAM_DAYS = 183
+HORIZON_DAYS = 365
 
 
-def build(con):
-    rec = pd.read_sql_query(
-        """SELECT r.campno, r.make, r.model, m.system, MIN(r.report_date) AS report_date
+def load_events(con):
+    """One row per (campno, make, model, subsystem) with its announcement date."""
+    ev = pd.read_sql_query(
+        """SELECT r.campno, r.make, r.model, m.system, m.subsystem, MIN(r.report_date) AS report_date
            FROM recalls r JOIN component_map m ON m.raw_component = COALESCE(r.component, '')
            WHERE r.report_date IS NOT NULL
-           GROUP BY 1, 2, 3, 4""", con)
-    rec["report_date"] = pd.to_datetime(rec["report_date"])
-    df, start, _ = load_counts(con)
-    totals = df.groupby(["make", "model", "system"])["n"].sum()
-    spikes = pd.read_sql_query("SELECT make, model, system, month FROM spikes", con)
-    spikes["flag_date"] = pd.PeriodIndex(spikes["month"], freq="M").end_time.normalize()
-    flags = {k: g.sort_values("flag_date") for k, g in spikes.groupby(["make", "model", "system"])}
-    recalls_by_series = {k: g["report_date"].sort_values().tolist()
-                         for k, g in rec.groupby(["make", "model", "system"])}
+           GROUP BY 1, 2, 3, 4, 5""", con)
+    ev["report_date"] = pd.to_datetime(ev["report_date"])
+    return ev
 
-    out = []
-    for r in rec.itertuples():
-        key = (r.make, r.model, r.system)
-        mstart = start.get((r.make, r.model))
-        first_ok = (pd.Period(mstart, "M") + (WINDOW - 1 + MIN_HISTORY)).start_time if mstart else None
-        eligible = int(totals.get(key, 0) >= MIN_TOTAL and first_ok is not None
-                       and r.report_date >= first_ok)
-        first_flag = lead = clean = None
-        g = flags.get(key)
-        if eligible and g is not None:
-            lo = r.report_date - pd.DateOffset(months=LOOKBACK_MONTHS)
-            cand = g[(g["flag_date"] < r.report_date) & (g["flag_date"] >= lo)]
-            others = [d for d in recalls_by_series[key] if d != r.report_date]
-            def contaminated(fd):
-                return any(fd - pd.DateOffset(months=CONTAMINATION_MONTHS) <= d <= fd for d in others)
-            if len(cand):
-                first = cand.iloc[0]
-                first_flag = first["month"]
-                lead = (r.report_date - first["flag_date"]).days / 7
-                clean = int(not contaminated(first["flag_date"]))
-                # Prefer the earliest uncontaminated flag if the first one is contaminated.
-                if not clean:
-                    for _, c in cand.iterrows():
-                        if not contaminated(c["flag_date"]):
-                            first_flag, lead, clean = c["month"], (r.report_date - c["flag_date"]).days / 7, 1
-                            break
-        out.append((r.campno, r.make, r.model, r.system, r.report_date.date().isoformat(),
-                    eligible, first_flag, lead, clean))
+
+def _recall_index(events, level):
+    """key -> (sorted dates array, matching campnos) of recalls in that series."""
+    col = "system" if level == "system" else "subsystem"
+    idx = {}
+    for key, g in events.drop_duplicates(["campno", "make", "model", col]).groupby(["make", "model", col]):
+        g = g.sort_values("report_date")
+        idx[key] = (g["report_date"].to_numpy(), g["campno"].to_numpy())
+    return idx
+
+
+def _flag_index(spikes, level):
+    s = spikes[spikes["level"] == level].copy()
+    s["flag_date"] = pd.PeriodIndex(s["month"], freq="M").end_time.normalize()
+    idx = {}
+    for key, g in s.groupby(["make", "model", "series"]):
+        g = g.sort_values("flag_date")
+        idx[key] = (g["flag_date"].to_numpy(), g["month"].to_numpy(), g["onset"].to_numpy())
+    return idx, s
+
+
+def _contaminated(rec, fd, own_camp):
+    """True if a recall other than own_camp hit this series in the CONTAM_DAYS up to fd."""
+    if rec is None:
+        return False
+    dates, camps = rec
+    lo = np.searchsorted(dates, fd - np.timedelta64(CONTAM_DAYS, "D"), side="left")
+    hi = np.searchsorted(dates, fd, side="right")
+    return any(camps[i] != own_camp for i in range(lo, hi))
+
+
+def eligible_keys(data, params=PARAMS):
+    """Series the detector could have fired on, per level -> {key: first testable date}."""
+    out = {}
+    first_ok = {k: (pd.Period(v, "M") + (params["window"] - 1 + params["min_history"])).start_time
+                for k, v in data["start"].items()}
+    for level in LEVELS:
+        c = data["counts"][level]
+        tot = c.groupby(["make", "model", "series"])["n"].sum()
+        out[level] = {k: first_ok[(k[0], k[1])] for k, n in tot.items() if n >= params["min_total"]}
     return out
 
 
-def summarize(rows):
-    d = pd.DataFrame(rows, columns=["campno", "make", "model", "system", "report_date",
-                                    "eligible", "first_flag", "lead_weeks", "clean"])
-    d["any_flag"] = d["first_flag"].notna()
-    d["clean_flag"] = d["clean"].fillna(0).astype(bool) & d["any_flag"]
-    e = d[d["eligible"] == 1]
-    print(f"{len(d):,} recall events; {len(e):,} eligible ({len(d) - len(e):,} on series too quiet for complaints to predict)")
-    for label, mask in (("clean", e["clean_flag"]), ("any", e["any_flag"])):
-        lead = e.loc[mask, "lead_weeks"]
-        print(f"{label:>5}: flagged {mask.sum():,} of {len(e):,} ({mask.mean():.0%}); "
-              f"median lead {lead.median():.1f} wk, mean {lead.mean():.1f} wk")
-    by = e.groupby("make").agg(recalls=("campno", "size"), flagged=("clean_flag", "sum"),
-                               median_lead_wk=("lead_weeks", lambda s: s[e.loc[s.index, "clean_flag"]].median()))
-    by["rate"] = (by["flagged"] / by["recalls"]).round(2)
+def score_events(events, spikes, elig, levels=LEVELS, clean_only=True):
+    """Per-event result. Flag search uses only `levels`; eligibility always uses both."""
+    rec_idx = {lv: _recall_index(events, lv) for lv in LEVELS}
+    flag_idx = {lv: _flag_index(spikes, lv)[0] for lv in LEVELS}
+    rows = []
+    for r in events.itertuples():
+        keys = {"system": (r.make, r.model, r.system), "subsystem": (r.make, r.model, r.subsystem)}
+        eligible = any(keys[lv] in elig[lv] and r.report_date >= elig[lv][keys[lv]] for lv in LEVELS)
+        best = None  # (lead_days, level, month, clean)
+        if eligible:
+            lo = np.datetime64(r.report_date - pd.Timedelta(days=LOOKBACK_DAYS))
+            hi = np.datetime64(r.report_date)
+            for lv in levels:
+                f = flag_idx[lv].get(keys[lv])
+                if f is None:
+                    continue
+                dates, months, _ = f
+                for i in range(np.searchsorted(dates, lo, side="left"), np.searchsorted(dates, hi, side="left")):
+                    clean = not _contaminated(rec_idx[lv].get(keys[lv]), dates[i], r.campno)
+                    if clean_only and not clean:
+                        continue
+                    lead = (np.datetime64(r.report_date) - dates[i]) / np.timedelta64(1, "D")
+                    if best is None or lead > best[0]:
+                        best = (lead, lv, months[i], int(clean))
+                    break  # earliest qualifying flag in this level
+        rows.append((r.campno, r.make, r.model, r.system, r.subsystem,
+                     r.report_date.date().isoformat(), int(eligible),
+                     best[1] if best else None, best[2] if best else None,
+                     best[0] / 7 if best else None, best[3] if best else None))
+    return pd.DataFrame(rows, columns=["campno", "make", "model", "system", "subsystem", "report_date",
+                                       "eligible", "level", "first_flag", "lead_weeks", "clean"])
+
+
+def onset_precision(events, spikes, levels, start=None, end=None):
+    """(hits, total) of clean onsets whose series saw a recall within HORIZON_DAYS."""
+    data_end = events["report_date"].max()
+    hits = total = 0
+    for lv in levels:
+        rec = _recall_index(events, lv)
+        s = spikes[(spikes["level"] == lv) & (spikes["onset"] == 1)]
+        fd_all = pd.PeriodIndex(s["month"], freq="M").end_time.normalize()
+        for (make, model, series), fd in zip(zip(s["make"], s["model"], s["series"]), fd_all):
+            if start is not None and fd < start:
+                continue
+            if end is not None and fd >= end:
+                continue
+            if fd > data_end - pd.Timedelta(days=HORIZON_DAYS):
+                continue
+            r = rec.get((make, model, series))
+            if _contaminated(r, np.datetime64(fd), None):
+                continue
+            total += 1
+            if r is not None:
+                d = r[0]
+                a = np.searchsorted(d, np.datetime64(fd), side="right")
+                b = np.searchsorted(d, np.datetime64(fd + pd.Timedelta(days=HORIZON_DAYS)), side="right")
+                hits += int(b > a)
+    return hits, total
+
+
+def summarize(res, label=""):
+    e = res[res["eligible"] == 1]
+    f = e[e["first_flag"].notna()]
+    print(f"{label}{len(res):,} recall events; {len(e):,} eligible; flagged {len(f):,} "
+          f"({len(f) / max(len(e), 1):.0%}); median lead {f['lead_weeks'].median():.1f} wk")
+    by = e.groupby("make").agg(events=("campno", "size"), flagged=("first_flag", "count"),
+                               median_lead_wk=("lead_weeks", "median"))
+    by["rate"] = (by["flagged"] / by["events"]).round(2)
     print(by.to_string())
 
 
 def main(db_path):
+    from detect_spikes import load_data
     con = sqlite3.connect(db_path)
+    events = load_events(con)
+    spikes = pd.read_sql_query("SELECT * FROM spikes", con)
+    data = load_data(con)
+    elig = eligible_keys(data)
+    res = score_events(events, spikes, elig)
+    for lv in (("system",), ("subsystem",)):
+        r = score_events(events, spikes, elig, levels=lv)
+        e = r[r["eligible"] == 1]
+        print(f"{lv[0]:>9} only: flagged {e['first_flag'].notna().sum():,} of {len(e):,} "
+              f"({e['first_flag'].notna().mean():.0%})")
+    print()
+    summarize(res, "both levels: ")
+    h, t = onset_precision(events, spikes, LEVELS)
+    print(f"onset precision: {h:,} of {t:,} clean episodes followed by a same-series recall within 12 months ({h / t:.0%})")
     con.execute("DROP TABLE IF EXISTS backtest")
     con.executescript((Path(__file__).parent.parent / "sql" / "schema.sql").read_text())
-    rows = build(con)
-    con.executemany("INSERT INTO backtest VALUES (?,?,?,?,?,?,?,?,?)", rows)
+    con.executemany("INSERT INTO backtest VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+                    [tuple(None if pd.isna(v) else v for v in row) for row in res.itertuples(index=False)])
     con.commit()
-    summarize(rows)
 
 
 if __name__ == "__main__":

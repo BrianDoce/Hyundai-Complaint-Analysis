@@ -53,6 +53,21 @@ CREATE TABLE IF NOT EXISTS sales (
     PRIMARY KEY (make, model, calendar_year)
 );
 
+-- Months flagged by src/detect_spikes.py. One row per (make, model, system, month) whose trailing
+-- 3-month complaint count is far above that series' own baseline. Rebuilt on every run.
+CREATE TABLE IF NOT EXISTS spikes (
+    make        TEXT NOT NULL,
+    model       TEXT NOT NULL,
+    system      TEXT NOT NULL,  -- component_map.system
+    month       TEXT NOT NULL,  -- YYYY-MM, last month of the 3-month window
+    window_n    INTEGER NOT NULL, -- distinct complaints in the window
+    expected    REAL NOT NULL,    -- window count expected from the baseline
+    ratio       REAL NOT NULL,    -- window_n / expected
+    p_value     REAL NOT NULL,    -- Poisson upper tail P(X >= window_n)
+    onset       INTEGER NOT NULL, -- 1 if the previous month was not flagged (start of an episode)
+    PRIMARY KEY (make, model, system, month)
+);
+
 -- Maps every distinct raw component string in complaints/recalls/investigations (exact text, as stored)
 -- to a normalized `system` (level-1 name made consistent across tables) and one of 5 topic buckets.
 -- Built by src/build_component_map.py. NHTSA has no infotainment category: that bucket is a rough

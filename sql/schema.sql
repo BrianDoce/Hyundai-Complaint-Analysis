@@ -87,6 +87,28 @@ CREATE TABLE IF NOT EXISTS backtest (
     PRIMARY KEY (campno, make, model, subsystem)
 );
 
+-- Text-mined features per complaint (one row per distinct odino), from src/mine_text.py.
+-- Topics are keyword-tagged from the free-text description (multi-label), independent of NHTSA's
+-- component codes, so e.g. infotainment faults filed under ELECTRICAL SYSTEM are still found.
+CREATE TABLE IF NOT EXISTS complaint_text (
+    odino              TEXT PRIMARY KEY,
+    powertrain         INTEGER NOT NULL,
+    electrical         INTEGER NOT NULL,
+    infotainment       INTEGER NOT NULL,
+    driver_assistance  INTEGER NOT NULL,
+    sentiment          REAL,        -- VADER compound on lowercased text, -1 (negative) to 1
+    n_chars            INTEGER NOT NULL
+);
+
+-- Same topic tags for recalls, from the defect description, one row per campaign.
+CREATE TABLE IF NOT EXISTS recall_text (
+    campno             TEXT PRIMARY KEY,
+    powertrain         INTEGER NOT NULL,
+    electrical         INTEGER NOT NULL,
+    infotainment       INTEGER NOT NULL,
+    driver_assistance  INTEGER NOT NULL
+);
+
 -- Maps every distinct raw component string in complaints/recalls/investigations (exact text, as stored)
 -- to a normalized `system` (level-1 name made consistent across tables) and one of 5 topic buckets.
 -- Built by src/build_component_map.py. NHTSA has no infotainment category: that bucket is a rough

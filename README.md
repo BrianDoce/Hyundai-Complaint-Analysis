@@ -12,7 +12,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 |---|-----------|--------|
 | 1 | SQL database linking complaints, recalls, investigations (make/model/year/component) | Schema in `sql/schema.sql`; complaints ingest done (`src/ingest_complaints.py`); recalls ingest done (`src/ingest_recalls.py`); investigations ingest done (`src/ingest_investigations.py`); `component_map` built (`src/build_component_map.py`) |
 | 2 | Sales by model from press releases (complaints per vehicle sold) | TODO (`sales` table) |
-| 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | TODO |
+| 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | Tagging done (`src/mine_text.py`, lexicon in `src/topics.py` -> `complaint_text`, `recall_text`); not yet validated or used in the detector |
 | 4 | Spike detector on model/component complaint rates | Done at system + subsystem level (`src/detect_spikes.py` -> `spikes`); time-split tuning (`src/tune.py`) found no better thresholds; sales normalization still to do |
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
 | 6 | Recall latency (first clustering -> recall date) by brand and component | TODO |
@@ -31,6 +31,7 @@ python src/ingest_investigations.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/build_component_map.py data/recall_radar.db   # after the three ingests
 python src/detect_spikes.py data/recall_radar.db
 python src/backtest.py data/recall_radar.db
+python src/mine_text.py data/recall_radar.db   # ~3 min; --audit shows lexicon term counts
 python src/tune.py data/recall_radar.db        # optional, ~6 min, writes reports/tuning_results.csv
 ```
 

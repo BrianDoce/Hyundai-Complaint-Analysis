@@ -32,7 +32,7 @@ CREATE TABLE IF NOT EXISTS recalls (
     summary      TEXT
 );
 
--- TODO: load from investigations flat file
+-- Loaded from FLAT_INV.txt by src/ingest_investigations.py
 CREATE TABLE IF NOT EXISTS investigations (
     nhtsa_id     TEXT NOT NULL,   -- e.g. PE24012
     make         TEXT NOT NULL,
@@ -40,8 +40,11 @@ CREATE TABLE IF NOT EXISTS investigations (
     model_year   INTEGER,
     component    TEXT,
     open_date    DATE,
+    close_date   DATE,
+    campno       TEXT,            -- recall campaign this investigation led to, if any (joins recalls.campno)
     subject      TEXT
 );
+
 
 -- TODO: hand-collected from automaker press releases (Tesla does not report by model: document estimates)
 CREATE TABLE IF NOT EXISTS sales (

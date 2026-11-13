@@ -53,8 +53,12 @@ CREATE TABLE IF NOT EXISTS sales (
     PRIMARY KEY (make, model, calendar_year)
 );
 
--- Maps NHTSA's free-text component strings to a small stable set, plus the NLP topic buckets.
+-- Maps every distinct raw component string in complaints/recalls/investigations (exact text, as stored)
+-- to a normalized `system` (level-1 name made consistent across tables) and one of 5 topic buckets.
+-- Built by src/build_component_map.py. NHTSA has no infotainment category: that bucket is a rough
+-- proxy (instrument cluster, rear-camera display, communication); text mining refines it later.
 CREATE TABLE IF NOT EXISTS component_map (
-    raw_component TEXT PRIMARY KEY,
-    component_group TEXT NOT NULL  -- powertrain | electrical | infotainment | driver_assistance | other
+    raw_component   TEXT PRIMARY KEY,
+    system          TEXT NOT NULL,  -- e.g. ENGINE, SERVICE BRAKES, FUEL SYSTEM, OTHER
+    component_group TEXT NOT NULL   -- powertrain | electrical | infotainment | driver_assistance | other
 );

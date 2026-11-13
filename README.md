@@ -10,7 +10,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 
 | # | Plan item | Status |
 |---|-----------|--------|
-| 1 | SQL database linking complaints, recalls, investigations (make/model/year/component) | Schema in `sql/schema.sql`; complaints ingest done (`src/ingest_complaints.py`); recalls ingest done (`src/ingest_recalls.py`); investigations ingest done (`src/ingest_investigations.py`); `component_map` TODO |
+| 1 | SQL database linking complaints, recalls, investigations (make/model/year/component) | Schema in `sql/schema.sql`; complaints ingest done (`src/ingest_complaints.py`); recalls ingest done (`src/ingest_recalls.py`); investigations ingest done (`src/ingest_investigations.py`); `component_map` built (`src/build_component_map.py`) |
 | 2 | Sales by model from press releases (complaints per vehicle sold) | TODO (`sales` table) |
 | 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | TODO |
 | 4 | Spike detector on model/component complaint rates | TODO |
@@ -28,6 +28,7 @@ pip install -r requirements.txt
 python src/ingest_complaints.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/ingest_recalls.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/ingest_investigations.py data/raw/nhtsa/<date> data/recall_radar.db
+python src/build_component_map.py data/recall_radar.db   # after the three ingests
 ```
 
 Raw NHTSA flat files go in `data/raw/` (git-ignored).
@@ -38,6 +39,7 @@ Raw NHTSA flat files go in `data/raw/` (git-ignored).
 - NHTSA component strings differ between complaints and recalls; joining needs the `component_map` table, so expect fuzzy matches and document them.
 - Recalls are one row per (campaign, make, model, year); count `DISTINCT campno`. `report_date` is RCDATE (manufacturer report received by NHTSA).
 - Investigations are one row per (investigation, make, model, year, campaign): count `DISTINCT nhtsa_id`. `campno` links an investigation to the recall(s) it led to (`recalls.campno`); one investigation can link to many campaigns, and most have none.
+- `component_map` covers every raw component string in all three tables (`system` = level-1 name made consistent, e.g. ENGINE AND ENGINE COOLING -> ENGINE; `component_group` = topic bucket). NHTSA has no infotainment category, so that bucket is a proxy (instrument cluster, rear-camera display, communication) and a few large recall campaigns dominate it; refine with text mining. Rules are in the script; review them before trusting group-level results.
 - NHTSA make `GENESIS` also covers pre-2015 non-Hyundai items (e.g. 1993 equipment recalls); filter to 2015+ for the Genesis brand.
 - Tesla does not publish sales by model; any figures are estimates and must be labeled as such.
 

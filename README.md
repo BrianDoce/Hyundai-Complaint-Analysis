@@ -15,7 +15,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 | 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | Tagging done (`src/mine_text.py`, lexicon in `src/topics.py` -> `complaint_text`, `recall_text`) and used as a third spike-detector level; sentiment computed but not yet used |
 | 4 | Spike detector on model/component complaint rates | Done at system, subsystem and text-topic level (`src/detect_spikes.py` -> `spikes`); thresholds not retuned since topics were added; sales normalization still to do |
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
-| 6 | Recall latency (first clustering -> recall date) by brand and component | TODO |
+| 6 | Recall latency (first clustering -> recall date) by brand and component | First version done (`src/latency.py` -> `recall_latency`): detector warning lead + investigation-to-recall time; brand differences are within noise |
 | 7 | Weekly GitHub Action refresh | TODO |
 | 8 | Tableau Public dashboard + one-page recommendation | TODO |
 
@@ -32,6 +32,7 @@ python src/build_component_map.py data/recall_radar.db   # after the three inges
 python src/detect_spikes.py data/recall_radar.db
 python src/backtest.py data/recall_radar.db
 python src/mine_text.py data/recall_radar.db   # ~3 min; --audit shows lexicon term counts
+python src/latency.py data/recall_radar.db
 python src/tune.py data/recall_radar.db        # optional, ~6 min, writes reports/tuning_results.csv
 ```
 
@@ -55,6 +56,12 @@ Raw NHTSA flat files go in `data/raw/` (git-ignored).
 ## Result (fill in once the backtest exists)
 
 > Data as of 2026-11-01, default thresholds. Recall: system + topic series flag 220 of 2,239 eligible recalls (9.8%), a median of 32 weeks before announcement (adding subsystem: 10.3%). Precision, the share of clean spike episodes followed by a same-series recall within 12 months, beats each level's own no-skill rate: system 14.0% vs 5.7%, topic 24.8% vs 14.1% (2021+ only: 18.6% vs 7.4% and 27.3% vs 19.3%, the topic figure on just 55 episodes), subsystem 2.8% vs 1.9% (barely). Topic series catch 45 recalls that system series miss. Overall the detector is a modest, noisy early warning: it finds about 1 in 10 recalls, mostly high-volume defects, with 2-3x better-than-chance precision. An earlier version of this note said precision was near chance; that compared pooled precision against a system-only baseline and was wrong. Thresholds were tuned before topics existed and should be re-tuned on system + topic.
+
+## Recall latency
+
+> Of 1,127 testable recall campaigns, the detector warned on 162 (14%), a median of 35 weeks early. By brand the warned share is 12-19% and median lead 28-39 weeks (Tesla 39, Honda 37, Toyota 36, Hyundai 31, Kia 28; Genesis has 16 testable campaigns); the interquartile ranges overlap, so no brand is reliably faster than another on this evidence. Official path: for the 140 recalls NHTSA links to an investigation, the median time from investigation opening to recall is 22 weeks (Hyundai 20, Toyota 23, Honda 24, Kia 31; Tesla has 1 linked case).
+
+A first attempt measured weeks since 5 complaints arrived within 90 days. It was dropped: on dates with no recall it gave nearly the same answer (cluster found for 19% of non-recall dates vs 23% of recalls), because busy series always have such clusters. It measures complaint volume, not warning time.
 
 ## Recommendation
 

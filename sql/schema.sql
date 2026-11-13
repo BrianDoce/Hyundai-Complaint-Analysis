@@ -87,6 +87,20 @@ CREATE TABLE IF NOT EXISTS backtest (
     PRIMARY KEY (campno, make, model, subsystem)
 );
 
+-- One row per recall campaign, from src/latency.py. lead_weeks = spike-detector warning before the
+-- announcement (NULL = no warning); inv_latency_wk = linked investigation open date -> announcement.
+CREATE TABLE IF NOT EXISTS recall_latency (
+    campno           TEXT NOT NULL,
+    make             TEXT NOT NULL,
+    report_date      DATE NOT NULL,
+    component_group  TEXT NOT NULL,
+    eligible         INTEGER NOT NULL,  -- 1 if the detector could have fired (enough complaints/history)
+    flagged          INTEGER NOT NULL,
+    lead_weeks       REAL,
+    inv_latency_wk   REAL,
+    PRIMARY KEY (campno, make)
+);
+
 -- Text-mined features per complaint (one row per distinct odino), from src/mine_text.py.
 -- Topics are keyword-tagged from the free-text description (multi-label), independent of NHTSA's
 -- component codes, so e.g. infotainment faults filed under ELECTRICAL SYSTEM are still found.

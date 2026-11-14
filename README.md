@@ -16,7 +16,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 | 4 | Spike detector on model/component complaint rates | Done at system, subsystem and text-topic level (`src/detect_spikes.py` -> `spikes`); thresholds re-tuned on system + topic series (`src/tune.py`); sales normalization still to do |
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
 | 6 | Recall latency (first clustering -> recall date) by brand and component | First version done (`src/latency.py` -> `recall_latency`): detector warning lead + investigation-to-recall time; brand differences are within noise |
-| 7 | Weekly GitHub Action refresh | TODO |
+| 7 | Weekly GitHub Action refresh | Written and tested locally end to end (`.github/workflows/weekly-refresh.yml`, `src/refresh.py`, `src/export_reports.py`); not yet run on GitHub |
 | 8 | Tableau Public dashboard + one-page recommendation | Recommendation drafted (`docs/recommendation.md`); dashboard TODO |
 
 `src/filter_complaints.py` is the original case study: the ICCU-recalled vs. non-recalled E-GMP models (Ioniq 5/6, EV6, GV60...). It is the Hyundai worked example for the backtest, not the whole project.
@@ -39,6 +39,10 @@ python src/tune.py data/recall_radar.db        # optional, ~6 min, writes report
 ```
 
 Raw NHTSA flat files go in `data/raw/` (git-ignored).
+
+## Weekly refresh
+
+`.github/workflows/weekly-refresh.yml` runs Mondays 12:00 UTC (and on demand from the Actions tab): it downloads the NHTSA flat files, rebuilds the database with `python src/refresh.py --download`, and commits the small files in `reports/latest/` (`alerts.csv` = new spike alerts this week, `spikes.csv`, `backtest.csv`, `recall_latency.csv`, `summary.json`). The database is not committed. A sanity gate fails the run, before any report is overwritten, if complaint, recall or investigation counts drop more than 2% from the last run.
 
 ## Data notes
 

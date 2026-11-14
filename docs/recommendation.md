@@ -30,5 +30,5 @@ Can public NHTSA complaints flag an emerging defect before it becomes a recall, 
 
 - Re-tuning is done (component + topic series, each scored against its own chance rate) but the held-out gain was small; revisit after sales normalization.
 - Normalize by sales (complaints per vehicle sold) so growth in a new model stops looking like a spike. Tesla figures will be estimates.
-- Split series by model year, and validate the topic keyword list further (about half of sampled infotainment tags were clearly right).
+- Splitting series by model year was tested and did worse (fewer testable recalls, lower precision above chance), so series stay pooled. Validate the topic keyword list further (about half of sampled infotainment tags were clearly right).
 - Backtest result lines are on pooled data; a clean held-out period is only 2021 onward.

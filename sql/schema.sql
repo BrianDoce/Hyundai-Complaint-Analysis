@@ -46,45 +46,13 @@ CREATE TABLE IF NOT EXISTS investigations (
 );
 
 
--- TODO: hand-collected from automaker press releases (Tesla does not report by model: document estimates)
+-- US calendar-year unit sales by model, loaded from data/sales/us_sales.csv by src/ingest_sales.py.
+-- Hand-collected: every row needs a source_url. Tesla does not report by model, so its rows are estimates
+-- and must have is_estimate = 1.
 CREATE TABLE IF NOT EXISTS sales (
     make TEXT NOT NULL, model TEXT NOT NULL, calendar_year INTEGER NOT NULL,
-    units_sold INTEGER NOT NULL, source_url TEXT,
+    units_sold INTEGER NOT NULL, source_url TEXT NOT NULL, is_estimate INTEGER NOT NULL DEFAULT 0,
     PRIMARY KEY (make, model, calendar_year)
-);
-
--- Months flagged by src/detect_spikes.py (`level`: 'system', 'subsystem' or 'topic').
--- One row per (make, model, series, month) whose trailing complaint count is far above that series' own
--- baseline. `series` is component_map.system, component_map.subsystem or a topic name, depending on level. Rebuilt every run.
-CREATE TABLE IF NOT EXISTS spikes (
-    level       TEXT NOT NULL,
-    make        TEXT NOT NULL,
-    model       TEXT NOT NULL,
-    series      TEXT NOT NULL,
-    month       TEXT NOT NULL,  -- YYYY-MM, last month of the window
-    window_n    INTEGER NOT NULL, -- distinct complaints in the window
-    expected    REAL NOT NULL,    -- window count expected from the baseline
-    ratio       REAL NOT NULL,    -- window_n / expected
-    p_value     REAL NOT NULL,    -- Poisson upper tail P(X >= window_n)
-    onset       INTEGER NOT NULL, -- 1 if the previous month was not flagged (start of an episode)
-    PRIMARY KEY (level, make, model, series, month)
-);
-
--- One row per recall event (campaign x make x model x subsystem), scored by src/backtest.py:
--- did the spike detector flag that series before the recall, and how early?
-CREATE TABLE IF NOT EXISTS backtest (
-    campno          TEXT NOT NULL,
-    make            TEXT NOT NULL,
-    model           TEXT NOT NULL,
-    system          TEXT NOT NULL,
-    subsystem       TEXT NOT NULL,
-    report_date     DATE NOT NULL,
-    eligible        INTEGER NOT NULL, -- 1 if the detector could have fired at either level
-    level           TEXT,             -- level of the flag used (NULL if none)
-    first_flag      TEXT,             -- YYYY-MM of the qualifying flag in the lookback
-    lead_weeks      REAL,             -- weeks from the end of that month to report_date
-    clean           INTEGER,          -- 1 if no other recall hit that series in the 6 months before the flag
-    PRIMARY KEY (campno, make, model, subsystem)
 );
 
 -- One row per recall campaign, from src/latency.py. lead_weeks = spike-detector warning before the

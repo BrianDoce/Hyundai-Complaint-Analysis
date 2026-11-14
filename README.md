@@ -11,7 +11,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 | # | Plan item | Status |
 |---|-----------|--------|
 | 1 | SQL database linking complaints, recalls, investigations (make/model/year/component) | Schema in `sql/schema.sql`; complaints ingest done (`src/ingest_complaints.py`); recalls ingest done (`src/ingest_recalls.py`); investigations ingest done (`src/ingest_investigations.py`); `component_map` built (`src/build_component_map.py`) |
-| 2 | Sales by model from press releases (complaints per vehicle sold) | TODO (`sales` table) |
+| 2 | Sales by model (complaints per vehicle sold) | Partial: Hyundai and Kia 2018-2025, Toyota 2022-2025, Honda 2024-2025 loaded (`data/sales/us_sales.csv`, `src/ingest_sales.py`, see `docs/sales_sources.md`); Tesla, Genesis and older years missing; not yet used in the detector |
 | 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | Tagging done (`src/mine_text.py`, lexicon in `src/topics.py` -> `complaint_text`, `recall_text`) and used as a third spike-detector level; sentiment computed but not yet used |
 | 4 | Spike detector on model/component complaint rates | Done at system, subsystem and text-topic level (`src/detect_spikes.py` -> `spikes`); thresholds re-tuned on system + topic series (`src/tune.py`); sales normalization still to do |
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
@@ -29,6 +29,7 @@ python src/ingest_complaints.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/ingest_recalls.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/ingest_investigations.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/build_component_map.py data/recall_radar.db   # after the three ingests
+python src/ingest_sales.py data/recall_radar.db   # sales by model, hand-collected CSV
 python src/detect_spikes.py data/recall_radar.db
 python src/backtest.py data/recall_radar.db
 python src/mine_text.py data/recall_radar.db   # ~3 min; --audit shows lexicon term counts

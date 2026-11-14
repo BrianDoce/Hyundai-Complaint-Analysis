@@ -1,21 +1,85 @@
 make,model,calendar_year,units_sold,source_url,is_estimate
+HONDA,ACCORD,2018,291071,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,ACCORD,2019,267567,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,ACCORD,2020,199458,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,ACCORD,2021,202676,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,ACCORD,2022,154612,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,ACCORD,2023,197947,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,ACCORD,2024,162723,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,ACCORD,2025,150196,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
+HONDA,CIVIC,2018,325760,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CIVIC,2019,325650,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CIVIC,2020,261225,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CIVIC,2021,263787,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CIVIC,2022,133932,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CIVIC,2023,200381,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,CIVIC,2024,242005,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,CIVIC,2025,238661,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
+HONDA,CLARITY,2018,20174,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CLARITY,2019,11654,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CLARITY,2020,4215,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CLARITY,2021,2597,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CLARITY,2022,208,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CR-V,2018,379013,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CR-V,2019,384168,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CR-V,2020,333502,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CR-V,2021,361271,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CR-V,2022,238155,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,CR-V,2023,361457,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,CR-V,2024,402791,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,CR-V,2025,403768,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
+HONDA,CR-Z,2018,38,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CR-Z,2019,2,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,CR-Z,2020,1,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,FIT,2018,35300,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,FIT,2019,35414,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,FIT,2020,32488,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,FIT,2021,8695,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,HR-V,2018,85494,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,HR-V,2019,99104,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,HR-V,2020,84027,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,HR-V,2021,137090,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,HR-V,2022,115416,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,HR-V,2023,122206,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,HR-V,2024,151468,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,HR-V,2025,148771,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
+HONDA,INSIGHT,2018,12510,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,INSIGHT,2019,23686,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,INSIGHT,2020,15932,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,INSIGHT,2021,19431,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,INSIGHT,2022,7628,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,ODYSSEY,2018,106327,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,ODYSSEY,2019,99113,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,ODYSSEY,2020,83409,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,ODYSSEY,2021,76125,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,ODYSSEY,2022,47615,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,ODYSSEY,2023,74738,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,ODYSSEY,2024,80293,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,ODYSSEY,2025,88462,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
+HONDA,PASSPORT,2019,36085,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,PASSPORT,2020,39567,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,PASSPORT,2021,53133,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,PASSPORT,2022,41306,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,PASSPORT,2023,43502,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,PASSPORT,2024,32527,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,PASSPORT,2025,55231,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
+HONDA,PILOT,2018,159615,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,PILOT,2019,135008,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,PILOT,2020,123813,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,PILOT,2021,143062,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,PILOT,2022,99567,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,PILOT,2023,110298,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,PILOT,2024,141245,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,PILOT,2025,124209,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,PRELUDE,2025,204,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,PROLOGUE,2024,33017,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,PROLOGUE,2025,39194,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
+HONDA,RIDGELINE,2018,30592,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,RIDGELINE,2019,33334,https://www.best-selling-cars.com/usa/2019-full-year-usa-honda-and-acura-brand-sales/,0
+HONDA,RIDGELINE,2020,32168,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,RIDGELINE,2021,41355,https://www.best-selling-cars.com/usa/2021-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,RIDGELINE,2022,42762,https://www.best-selling-cars.com/usa/2022-full-year-usa-honda-and-acura-sales-by-model/,0
+HONDA,RIDGELINE,2023,52001,https://www.best-selling-cars.com/usa/2023-full-year-usa-honda-and-acura-us-car-sales-by-model,0
 HONDA,RIDGELINE,2024,45421,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HONDA,RIDGELINE,2025,48448,https://www.best-selling-cars.com/usa/2025-full-year-usa-honda-and-acura-car-sales-by-model/,0
 HYUNDAI,ACCENT,2018,29090,https://www.best-selling-cars.com/usa/2019-full-year-usa-hyundai-motor-america-sales/,0
@@ -207,26 +271,51 @@ KIA,TELLURIDE,2022,99891,https://www.best-selling-cars.com/usa/2023-full-year-us
 KIA,TELLURIDE,2023,110765,https://www.best-selling-cars.com/usa/2023-full-year-usa-kia-america-us-car-sales-by-model/,0
 KIA,TELLURIDE,2024,115504,https://www.best-selling-cars.com/usa/2025-full-year-usa-kia-america-us-car-sales-by-model/,0
 KIA,TELLURIDE,2025,123281,https://www.best-selling-cars.com/usa/2025-full-year-usa-kia-america-us-car-sales-by-model/,0
+TOYOTA,4RUNNER,2018,139694,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,4RUNNER,2019,131888,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,4RUNNER,2020,129052,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,4RUNNER,2021,144696,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,4RUNNER,2022,121023,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,4RUNNER,2023,119238,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,4RUNNER,2024,92156,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,4RUNNER,2025,98805,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,86,2018,4146,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,86,2019,3398,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,86,2020,2476,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,86,2021,1152,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,AVALON,2018,33581,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,AVALON,2019,27767,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,AVALON,2020,18421,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,AVALON,2021,19460,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,AVALON,2022,12215,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,AVALON,2023,55,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,BZ4X,2022,1220,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,BZ4X,2023,9329,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,BZ4X,2024,18570,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,BZ4X,2025,15609,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,C-HR,2018,49642,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,C-HR,2019,48930,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,C-HR,2020,42936,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,C-HR,2021,35707,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,C-HR,2022,12141,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,C-HR,2023,777,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
+TOYOTA,CAMRY,2018,343439,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,CAMRY,2019,336978,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,CAMRY,2020,294348,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,CAMRY,2021,313795,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,CAMRY,2022,295201,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,CAMRY,2023,290649,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,CAMRY,2024,309876,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,CAMRY,2025,316185,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,COROLLA,2018,303732,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,COROLLA,2019,304850,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,COROLLA,2020,237178,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,COROLLA,2021,248993,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,COROLLA,2022,222216,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,COROLLA,2023,232370,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,COROLLA,2024,232908,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,COROLLA,2025,248088,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,COROLLA CROSS,2021,7203,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,COROLLA CROSS,2022,56666,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,COROLLA CROSS,2023,71110,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,COROLLA CROSS,2024,93021,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
@@ -236,6 +325,9 @@ TOYOTA,CROWN,2024,19648,https://www.best-selling-cars.com/usa/2025-full-year-usa
 TOYOTA,CROWN,2025,12309,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,CROWN SIGNIA,2024,10263,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,CROWN SIGNIA,2025,20550,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,FJ CRUISER,2018,3,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,FJ CRUISER,2019,1,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,FJ CRUISER,2021,1,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,GR86,2022,11996,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,GR86,2023,11078,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,GR86,2024,11426,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
@@ -243,47 +335,94 @@ TOYOTA,GR86,2025,9940,https://www.best-selling-cars.com/usa/2025-full-year-usa-t
 TOYOTA,GRAND HIGHLANDER,2023,48036,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,GRAND HIGHLANDER,2024,71721,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,GRAND HIGHLANDER,2025,136801,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,HIGHLANDER,2018,244511,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,HIGHLANDER,2019,239438,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,HIGHLANDER,2020,212276,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,HIGHLANDER,2021,264128,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,HIGHLANDER,2022,222805,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,HIGHLANDER,2023,169543,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,HIGHLANDER,2024,89658,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,HIGHLANDER,2025,56208,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,LAND CRUISER,2018,3222,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,LAND CRUISER,2019,3536,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,LAND CRUISER,2020,3147,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,LAND CRUISER,2021,3711,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,LAND CRUISER,2022,48,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,LAND CRUISER,2023,7,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,LAND CRUISER,2024,29113,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,LAND CRUISER,2025,43946,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,MIRAI,2018,1700,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,MIRAI,2019,1502,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,MIRAI,2020,499,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,MIRAI,2021,2629,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,MIRAI,2022,2094,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,MIRAI,2023,2737,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,MIRAI,2024,499,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,MIRAI,2025,210,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,PRIUS,2018,87590,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,PRIUS,2019,69718,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,PRIUS,2020,43525,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,PRIUS,2021,59010,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,PRIUS,2022,36919,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,PRIUS,2023,38052,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,PRIUS,2024,44711,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,PRIUS,2025,56488,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,RAV4,2018,427170,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,RAV4,2019,448071,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,RAV4,2020,430387,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,RAV4,2021,407739,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,RAV4,2022,399941,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,RAV4,2023,434943,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,RAV4,2024,475193,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,RAV4,2025,479288,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,SEQUOIA,2018,11121,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,SEQUOIA,2019,10289,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,SEQUOIA,2020,7364,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,SEQUOIA,2021,8070,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,SEQUOIA,2022,5314,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,SEQUOIA,2023,22182,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,SEQUOIA,2024,26097,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,SEQUOIA,2025,26186,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,SIENNA,2018,87671,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,SIENNA,2019,73585,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,SIENNA,2020,42885,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,SIENNA,2021,107990,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,SIENNA,2022,69751,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,SIENNA,2023,66547,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,SIENNA,2024,75037,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,SIENNA,2025,101486,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,SUPRA,2019,2884,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,SUPRA,2020,5887,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,SUPRA,2021,6830,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,SUPRA,2022,4952,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,SUPRA,2023,2652,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,SUPRA,2024,2615,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,SUPRA,2025,2953,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,TACOMA,2018,245659,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,TACOMA,2019,248801,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,TACOMA,2020,238806,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,TACOMA,2021,252520,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,TACOMA,2022,237323,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,TACOMA,2023,234768,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,TACOMA,2024,192813,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,TACOMA,2025,274638,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,TUNDRA,2018,118258,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,TUNDRA,2019,111673,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,TUNDRA,2020,109203,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,TUNDRA,2021,81959,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,TUNDRA,2022,104246,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,TUNDRA,2023,125185,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,TUNDRA,2024,159528,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,TUNDRA,2025,147610,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,VENZA,2018,9,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,VENZA,2019,9,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,VENZA,2020,13073,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,VENZA,2021,61988,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
 TOYOTA,VENZA,2022,33683,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,VENZA,2023,29907,https://www.best-selling-cars.com/usa/2023-full-year-usa-toyota-and-lexus-us-car-sales-by-model/,0
 TOYOTA,VENZA,2024,32086,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
 TOYOTA,VENZA,2025,707,https://www.best-selling-cars.com/usa/2025-full-year-usa-toyota-and-lexus-car-sales-by-model/,0
+TOYOTA,YARIS,2018,27210,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,YARIS,2019,21916,https://www.best-selling-cars.com/usa/2019-full-year-usa-toyota-and-lexus-sales/,0
+TOYOTA,YARIS,2020,6437,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0
+TOYOTA,YARIS,2021,205,https://www.best-selling-cars.com/usa/2021-full-year-usa-toyota-and-lexus-sales-by-model/,0

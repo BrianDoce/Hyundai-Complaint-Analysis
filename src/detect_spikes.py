@@ -19,7 +19,9 @@ the series' own baseline:
   flag          = count >= min_count and count / expected >= min_ratio
                   and Poisson upper-tail p < alpha
 
-Thresholds live in PARAMS; src/tune.py chose the defaults with a time split.
+Thresholds live in PARAMS; src/tune.py chose them on pre-2021 recalls (system + topic
+series; see reports/tuning_results_system_topic.csv). Subsystem series use the same
+thresholds but were not tuned and are weak.
 Known limits: no fleet-size adjustment yet (sales data will replace the model
 scale), and complaints surge after a recall is announced, so the backtest must
 only count flags that precede the recall.
@@ -41,13 +43,13 @@ LEVELS = ("system", "subsystem", "topic")
 TOPIC_COLS = ("powertrain", "electrical", "infotainment", "driver_assistance")
 
 PARAMS = dict(
-    window=3,        # months in the trailing window
+    window=2,        # months in the trailing window
     base_months=24,  # max baseline length
     min_history=12,  # min baseline months before a series can be flagged
     min_rate=0.25,   # floor on baseline complaints per month
     min_count=5,     # min complaints in the window
-    min_ratio=3.0,   # min count / expected
-    alpha=1e-3,
+    min_ratio=2.0,   # min count / expected
+    alpha=1e-4,
     min_total=30,    # skip series with fewer total complaints
 )
 

@@ -1,0 +1,27 @@
+{
+  "run_utc": "2026-11-14T20:41:44Z",
+  "data_through": "2026-10-29",
+  "complaints": 319349,
+  "recall_campaigns": 1547,
+  "investigations": 370,
+  "alert_months": [
+    "2026-10",
+    "2026-09"
+  ],
+  "n_alerts": 9,
+  "backtest": {
+    "recall_events": 3438,
+    "eligible_events": 2242,
+    "flagged_events": 227,
+    "flagged_share": 0.1012,
+    "median_lead_weeks": 30.4
+  },
+  "thresholds": {
+    "window": 2,
+    "base_months": 24,
+    "min_ratio": 2.0,
+    "alpha": 0.0001,
+    "min_count": 5,
+    "scale_mode": "others"
+  }
+}

@@ -17,7 +17,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
 | 6 | Recall latency (first clustering -> recall date) by brand and component | First version done (`src/latency.py` -> `recall_latency`): detector warning lead + investigation-to-recall time; brand differences are within noise |
 | 7 | Weekly GitHub Action refresh | Written and tested locally end to end (`.github/workflows/weekly-refresh.yml`, `src/refresh.py`, `src/export_reports.py`); not yet run on GitHub |
-| 8 | Tableau Public dashboard + one-page recommendation | Recommendation drafted (`docs/recommendation.md`); dashboard TODO |
+| 8 | Tableau Public dashboard + one-page recommendation | Recommendation drafted (`docs/recommendation.md`); dashboard built as a Claude artifact (https://claude.ai/artifact/B1j2qwqLQDiu9LLgEeawVd) from `reports/latest`; Tableau Public version not done |
 
 `src/filter_complaints.py` is the original case study: the ICCU-recalled vs. non-recalled E-GMP models (Ioniq 5/6, EV6, GV60...). It is the Hyundai worked example for the backtest, not the whole project.
 

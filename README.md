@@ -11,7 +11,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 | # | Plan item | Status |
 |---|-----------|--------|
 | 1 | SQL database linking complaints, recalls, investigations (make/model/year/component) | Schema in `sql/schema.sql`; complaints ingest done (`src/ingest_complaints.py`); recalls ingest done (`src/ingest_recalls.py`); investigations ingest done (`src/ingest_investigations.py`); `component_map` built (`src/build_component_map.py`) |
-| 2 | Sales by model (complaints per vehicle sold) | Partial: Hyundai and Kia 2018-2025, Toyota 2022-2025, Honda 2024-2025 loaded (`data/sales/us_sales.csv`, `src/ingest_sales.py`, see `docs/sales_sources.md`); Tesla, Genesis and older years missing; not yet used in the detector |
+| 2 | Sales by model (complaints per vehicle sold) | Partial: Hyundai and Kia 2018-2025, Toyota 2022-2025, Honda 2024-2025 loaded (`data/sales/us_sales.csv`, `src/ingest_sales.py`, see `docs/sales_sources.md`); Tesla, Genesis and older years missing; `model_family` alias map built (`src/build_model_family.py`); not yet used in the detector |
 | 3 | Text mining: topics (powertrain, electrical, infotainment, driver assistance) + sentiment | Tagging done (`src/mine_text.py`, lexicon in `src/topics.py` -> `complaint_text`, `recall_text`) and used as a third spike-detector level; sentiment computed but not yet used |
 | 4 | Spike detector on model/component complaint rates | Done at system, subsystem and text-topic level (`src/detect_spikes.py` -> `spikes`); thresholds re-tuned on system + topic series (`src/tune.py`); sales normalization still to do |
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
@@ -30,6 +30,7 @@ python src/ingest_recalls.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/ingest_investigations.py data/raw/nhtsa/<date> data/recall_radar.db
 python src/build_component_map.py data/recall_radar.db   # after the three ingests
 python src/ingest_sales.py data/recall_radar.db   # sales by model, hand-collected CSV
+python src/build_model_family.py data/recall_radar.db   # variants/renames -> families, after the ingests
 python src/detect_spikes.py data/recall_radar.db
 python src/backtest.py data/recall_radar.db
 python src/mine_text.py data/recall_radar.db   # ~3 min; --audit shows lexicon term counts
@@ -51,6 +52,7 @@ Raw NHTSA flat files go in `data/raw/` (git-ignored).
 - `component_map.subsystem` keeps NHTSA's second level (e.g. ELECTRICAL SYSTEM:SOFTWARE); many complaints only have level 1, so subsystem series are thin. Model year is still pooled.
 - `tune.py` uses a time split (cutoff 2021-01-01) and F0.5 of recall and episode precision, with a no-skill baseline. The baseline is all eligible series-months, which understates the chance rate for busy series (they get more recalls), so the true lift is, if anything, smaller.
 - `topic` spikes use the keyword tags in `complaint_text` (a complaint can be in several topics); recalls are matched through the same tags on the defect text (`recall_text`). Topic tags mean "mentions", so topic series are broad (powertrain is 31% of complaints) and their chance rate is high; always compare precision with `tune.baseline_precision` for the same level.
+- `model_family` maps complaint variants (SANTA FE SPORT, PRIUS PRIME, ...) and renamed models (K5 -> OPTIMA, CARNIVAL -> SEDONA) to the family names sales use; `sales_by_family` is the sales view to join on. Rules are in the script; 95-99% of 2018+ complaints for the four brands with sales fall in a family that has sales rows (Toyota and Honda only for the years loaded).
 - NHTSA make `GENESIS` also covers pre-2015 non-Hyundai items (e.g. 1993 equipment recalls); filter to 2015+ for the Genesis brand.
 - Tesla does not publish sales by model; any figures are estimates and must be labeled as such.
 

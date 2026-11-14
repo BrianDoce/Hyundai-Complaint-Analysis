@@ -55,6 +55,24 @@ CREATE TABLE IF NOT EXISTS sales (
     PRIMARY KEY (make, model, calendar_year)
 );
 
+-- Maps every (make, model) string seen in complaints, recalls, investigations and sales to a model family,
+-- so complaints (which carry variants like SANTA FE SPORT, PRIUS PRIME) can be divided by sales (which
+-- report families). Built by src/build_model_family.py. Renamed models share a family named after the
+-- older NHTSA name (K5 -> OPTIMA, K4 -> FORTE, CARNIVAL -> SEDONA).
+CREATE TABLE IF NOT EXISTS model_family (
+    make   TEXT NOT NULL,
+    model  TEXT NOT NULL,
+    family TEXT NOT NULL,
+    PRIMARY KEY (make, model)
+);
+
+-- Sales rolled up to family and calendar year.
+CREATE VIEW IF NOT EXISTS sales_by_family AS
+    SELECT s.make, COALESCE(f.family, s.model) AS family, s.calendar_year, SUM(s.units_sold) AS units_sold,
+           MAX(s.is_estimate) AS is_estimate
+    FROM sales s LEFT JOIN model_family f ON f.make = s.make AND f.model = s.model
+    GROUP BY 1, 2, 3;
+
 -- One row per recall campaign, from src/latency.py. lead_weeks = spike-detector warning before the
 -- announcement (NULL = no warning); inv_latency_wk = linked investigation open date -> announcement.
 CREATE TABLE IF NOT EXISTS recall_latency (

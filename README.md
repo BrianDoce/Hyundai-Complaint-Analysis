@@ -17,7 +17,7 @@ Backtest brands: Hyundai (incl. Genesis), Kia, Toyota, Honda, Tesla.
 | 5 | Backtest on past recalls, all five brands: how early would it have fired? | Done (`src/backtest.py` -> `backtest`); result is weak, see Result |
 | 6 | Recall latency (first clustering -> recall date) by brand and component | First version done (`src/latency.py` -> `recall_latency`): detector warning lead + investigation-to-recall time; brand differences are within noise |
 | 7 | Weekly GitHub Action refresh | TODO |
-| 8 | Tableau Public dashboard + one-page recommendation | TODO |
+| 8 | Tableau Public dashboard + one-page recommendation | Recommendation drafted (`docs/recommendation.md`); dashboard TODO |
 
 `src/filter_complaints.py` is the original case study: the ICCU-recalled vs. non-recalled E-GMP models (Ioniq 5/6, EV6, GV60...). It is the Hyundai worked example for the backtest, not the whole project.
 
@@ -65,4 +65,4 @@ A first attempt measured weeks since 5 complaints arrived within 90 days. It was
 
 ## Recommendation
 
-TODO
+Draft in [docs/recommendation.md](docs/recommendation.md): use complaint spikes as a weekly triage watch list, not a forecast; they catch about 1 in 10 recalls, 7 to 9 months early, with 2 to 2.5x better-than-chance precision; no defensible brand speed ranking yet.

@@ -49,12 +49,14 @@ def fbeta(p, r, beta=BETA):
     return 0.0 if p + r == 0 else (1 + beta**2) * p * r / (beta**2 * p + r)
 
 
-def baseline_precision(data, events, elig, start, end, level="system"):
+def baseline_precision(data, events, elig, start, end, level="system", makes=None):
     """No-skill precision: clean eligible series-months at `level` followed by a recall in 12 months."""
     rec = _recall_index(events, level)
     data_end = events["report_date"].max()
     hits = total = 0
     for key, first in elig[level].items():
+        if makes is not None and key[0] not in makes:
+            continue
         r = rec.get(key)
         for m in pd.period_range(first, pd.Period(data["last"], "M"), freq="M"):
             fd = m.end_time.normalize()

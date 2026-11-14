@@ -51,6 +51,7 @@ PARAMS = dict(
     min_ratio=2.0,   # min count / expected
     alpha=1e-4,
     min_total=30,    # skip series with fewer total complaints
+    scale_mode="others",  # how to adjust for a growing model: "others" | "sales" | "none" (see detect)
 )
 
 
@@ -86,7 +87,11 @@ def load_data(con):
               .rename("total"))
     start = totals.reset_index().groupby(["make", "model"])["month"].min()
     last = raw["month"].max()
-    return dict(counts=counts, start=start, totals=totals, last=last)
+    fam = dict(con.execute("SELECT make || '|' || model, family FROM model_family"))
+    sales = {}
+    for make, family, year, units in con.execute("SELECT make, family, calendar_year, units_sold FROM sales_by_family"):
+        sales.setdefault((make, family), {})[year] = units
+    return dict(counts=counts, start=start, totals=totals, last=last, family=fam, sales=sales)
 
 
 def _trailing_mean(cs, lo, hi):
@@ -95,8 +100,36 @@ def _trailing_mean(cs, lo, hi):
     return (cs[hi] - cs[lo]) / n
 
 
+def exposure(idx, by_year):
+    """Trailing-12-month sales for each month in idx (NaN until 12 months of sales are known).
+
+    Annual sales are spread evenly over the year's months. Only a proxy for the
+    in-service fleet: it ignores older vehicles still drawing complaints.
+    """
+    units = np.array([by_year.get(m.year, np.nan) / 12 for m in idx])
+    return pd.Series(units).rolling(12).sum().to_numpy()
+
+
+def sales_scale(E, hi, lo, t):
+    """Growth in trailing-12-month sales from the baseline months to the window end; NaN if unknown."""
+    known = ~np.isnan(E)
+    cs = np.concatenate([[0.0], np.cumsum(np.where(known, E, 0.0))])
+    cc = np.concatenate([[0], np.cumsum(known)])
+    full = (cc[hi] - cc[lo]) == (hi - lo)
+    base = np.where(full & (hi > lo), (cs[hi] - cs[lo]) / np.maximum(hi - lo, 1), np.nan)
+    with np.errstate(invalid="ignore", divide="ignore"):
+        return E[t] / base
+
+
 def detect(data, level, params=PARAMS):
-    """Return a DataFrame of flagged months for one level."""
+    """Return a DataFrame of flagged months for one level.
+
+    scale_mode picks the growth adjustment applied to the baseline:
+      others  growth of the model's other complaints (default; also catches publicity surges)
+      sales   growth of the model's trailing-12-month sales, falling back to "others" where
+              sales are unknown
+      none    no adjustment
+    """
     p = params
     W, B = p["window"], p["base_months"]
     last = pd.Period(data["last"], "M")
@@ -123,7 +156,20 @@ def detect(data, level, params=PARAMS):
         base = _trailing_mean(cs, lo, hi)
         obase = _trailing_mean(cso, lo, hi)
         owin = (cso[t + 1] - cso[t + 1 - W]) / W
-        scale = np.maximum(1.0, owin / np.maximum(obase, p["min_rate"]))
+        others_scale = np.maximum(1.0, owin / np.maximum(obase, p["min_rate"]))
+        mode = p.get("scale_mode", "others")
+        if mode == "none":
+            scale = np.ones(len(t))
+        elif mode == "sales":
+            fam = data["family"].get(f"{make}|{model}", model)
+            by_year = data["sales"].get((make, fam))
+            if by_year:
+                ss = sales_scale(exposure(idx, by_year), hi, lo, t)
+                scale = np.where(np.isnan(ss), others_scale, np.maximum(1.0, ss))
+            else:
+                scale = others_scale
+        else:
+            scale = others_scale
         expected = W * np.maximum(base, p["min_rate"]) * scale
         ratio = k / expected
         cand = np.flatnonzero((k >= p["min_count"]) & (ratio >= p["min_ratio"]))

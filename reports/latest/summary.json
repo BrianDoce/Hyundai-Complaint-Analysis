@@ -1,9 +1,9 @@
 {
-  "run_utc": "2026-11-14T21:09:11Z",
+  "run_utc": "2026-11-16T21:24:25Z",
   "data_through": "2026-11-12",
   "complaints": 320385,
   "recall_campaigns": 1549,
-  "investigations": 370,
+  "investigations": 371,
   "alert_months": [
     "2026-11",
     "2026-10"
